@@ -22,7 +22,7 @@ def calculate_metrics(df):
             if impressions else 0,
         "CPC": round(spend / clicks, 2)
             if clicks else 0,
-        "CPM": round(spend / impressions * 1000, 2)
+        "CPA": round(spend / conversions, 2) if conversions else 0, "CPM": round(spend / impressions * 1000, 2)
             if impressions else 0,
         "Conversion Rate (%)": round(conversions / clicks * 100, 2)
             if clicks else 0,
@@ -56,3 +56,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

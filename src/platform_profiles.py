@@ -1,4 +1,3 @@
-
 PLATFORM_PROFILES = {
     "Facebook": {
         "avg_cpc": 0.80,
@@ -19,6 +18,20 @@ PLATFORM_PROFILES = {
         "avg_ctr": 0.040,
         "avg_conversion_rate": 0.060,
         "avg_cpm": 12.00,
+    },
+
+    "TikTok": {
+        "avg_cpc": 0.23,
+        "avg_ctr": 0.030,
+        "avg_conversion_rate": 0.020,
+        "avg_cpm": 7.00,
+    },
+
+    "YouTube": {
+        "avg_cpc": 0.41,
+        "avg_ctr": 0.022,
+        "avg_conversion_rate": 0.040,
+        "avg_cpm": 9.00,
     },
 }
 

@@ -86,8 +86,7 @@ def run_spark_pipeline(dataset_size=1000):
                     2
                 )
             )
-            .withColumn(
-                "CPM",
+            .withColumn("CPA", spark_round(when(col("conversions") > 0, col("spend") / col("conversions")).otherwise(0), 2)).withColumn("CPM",
                 spark_round(
                     when(
                         col("impressions") > 0,
@@ -147,3 +146,4 @@ def run_spark_pipeline(dataset_size=1000):
 
 if __name__ == "__main__":
     run_spark_pipeline(1000)
+

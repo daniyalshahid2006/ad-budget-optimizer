@@ -19,7 +19,7 @@ REPORT_DIR = BASE_DIR / "reports"
 DATASET_SIZES = [1_000, 10_000, 100_000, 1_000_000]
 
 # Advertising platforms
-PLATFORMS = ["Facebook", "Instagram", "Google"]
+PLATFORMS = ["Facebook", "Instagram", "Google", "TikTok", "YouTube"]
 
 # Reproducibility
 RANDOM_SEED = 42
@@ -40,3 +40,4 @@ for directory in [
 print("Project configuration loaded successfully!")
 print(f"Dataset sizes: {DATASET_SIZES}")
 print(f"Platforms: {PLATFORMS}")
+

@@ -1,4 +1,6 @@
-platform,impressions,clicks,conversions,spend,revenue,CTR (%),CPC,Conversion Rate (%),ROAS,rank,recommendation
-Google,7559723667,302281687,18137275,90720449.65,1541352696.84,4.0,0.3,6.0,16.99,1,Best performing platform
-Instagram,7592822458,227740215,11397147,75930884.06,968640795.21,3.0,0.33,5.0,12.76,2,Alternative platform
-Facebook,10084617035,252142365,11346745,85722602.04,964904476.35,2.5,0.34,4.5,11.26,3,Lower priority platform
+platform,ROAS,CPA,CTR (%),Conversion Rate (%),score,current_spend_share (%),recommended_share (%),recommended_budget_Rs,expected_revenue_Rs,rank,recommendation
+Google,16.98,5.0,4.0,6.0,1.0,25.5,29.5,294624,5002716,1,Top priority
+Instagram,12.77,6.66,3.0,5.0,0.772,26.5,22.7,227465,2904728,2,High priority
+Facebook,11.25,7.56,2.5,4.5,0.684,22.5,20.2,201557,2267516,3,Medium priority
+YouTube,8.31,10.23,2.2,4.0,0.534,14.3,15.7,157199,1306324,4,Low priority
+TikTok,7.27,11.68,3.0,2.0,0.404,11.2,11.9,119155,866257,5,Lowest priority

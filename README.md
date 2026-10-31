@@ -1,510 +1,310 @@
-# 🚀 Ad Budget Optimizer
+# Ad Budget Optimizer
 
-### Performance Benchmarking and Advertising Analytics Using Pandas, MapReduce, and Apache Spark
+### Advertising Analytics and Budget Recommendation Using Pandas, MapReduce, and Apache Spark
 
-The **Ad Budget Optimizer** is a Python-based data processing and analytics project that evaluates the performance of three different data processing approaches: **Pandas, MapReduce, and Apache Spark**.
+The **Ad Budget Optimizer** answers one business question: **where should a company spend its next Rs. 1,000,000 of advertising budget?**
 
-The project processes synthetic advertising campaign datasets of varying sizes to compare execution performance, analyze advertising metrics, and identify the most effective advertising platform based on Return on Ad Spend (ROAS).
-
-It evaluates advertising performance across **Facebook, Instagram, and Google**, providing data-driven recommendations to support advertising budget allocation.
+It generates synthetic advertising data for five platforms (Facebook, Instagram, Google, TikTok, YouTube), calculates marketing metrics with three different processing approaches (**Pandas, MapReduce, Apache Spark**), compares their performance, and produces a recommended budget split.
 
 ---
 
-## 📌 Table of Contents
+## Table of Contents
 
-- [Project Overview](#-project-overview)
-- [Objectives](#-objectives)
-- [Technologies](#-technologies-used)
-- [System Architecture](#-system-architecture)
-- [Dataset Information](#-dataset-information)
-- [Project Structure](#-project-structure)
-- [Installation](#-installation-and-setup)
-- [Running the Application](#-running-the-application)
-- [Benchmarking Methodology](#-benchmarking-methodology)
-- [Benchmark Results](#-benchmark-results)
-- [Performance Visualizations](#-performance-visualizations)
-- [Advertising Analytics](#-advertising-analytics)
-- [Recommendation System](#-recommendation-system)
-- [Reproducibility and Data Management](#-reproducibility-and-data-management)
-- [Conclusion](#-conclusion)
-- [Author](#-author)
-
----
-
-## 📖 Project Overview
-
-Digital advertising platforms generate large volumes of campaign data. Analyzing this information efficiently is important for understanding advertising performance and making informed budget allocation decisions.
-
-This project addresses two main challenges:
-
-1. **Processing Performance:** How do different data processing technologies perform when handling increasingly large advertising datasets?
-2. **Advertising Optimization:** Which advertising platform generates the highest return on advertising expenditure?
-
-To investigate these questions, the project implements three independent processing pipelines and evaluates them using four dataset sizes.
-
-The results are used to compare scalability, processing efficiency, and advertising platform performance.
-
-## 🎯 Objectives
-
-- Implement Pandas-based data processing.
-- Develop a MapReduce-inspired processing pipeline.
-- Implement distributed data processing using Apache Spark.
-- Compare processing performance across different dataset sizes.
-- Measure execution time using repeated benchmark executions.
-- Calculate important advertising performance metrics.
-- Generate performance comparison charts.
-- Rank advertising platforms based on ROAS.
-- Produce automated advertising recommendations.
-- Maintain reproducible dataset generation.
+- [Project Overview](#project-overview)
+- [Objectives](#objectives)
+- [Technologies](#technologies-used)
+- [System Architecture](#system-architecture)
+- [Dataset Information](#dataset-information)
+- [Project Structure](#project-structure)
+- [Installation](#installation-and-setup)
+- [Running the Application](#running-the-application)
+- [Benchmarking Methodology](#benchmarking-methodology)
+- [Benchmark Results](#benchmark-results)
+- [Performance Visualizations](#performance-visualizations)
+- [Advertising Analytics](#advertising-analytics)
+- [Budget Recommendation Engine](#budget-recommendation-engine)
+- [Reproducibility and Data Management](#reproducibility-and-data-management)
+- [Limitations](#limitations)
+- [Conclusion](#conclusion)
+- [Author](#author)
 
 ---
 
-## 🛠 Technologies Used
+## Project Overview
+
+Digital advertising platforms generate large volumes of campaign data. Analyzing it efficiently is important for budget decisions.
+
+This project addresses two questions:
+
+1. **Processing performance:** how do Pandas, MapReduce and Spark compare as the data grows?
+2. **Advertising optimization:** how should Rs. 1,000,000 be split across five advertising platforms?
+
+## Objectives
+
+- Generate reproducible synthetic advertising data (1,000 to 1,000,000 records).
+- Calculate CTR, CPC, CPA, CPM, conversion rate, ROAS and revenue per platform.
+- Implement the same analysis in Pandas, MapReduce and Apache Spark.
+- Benchmark all three over four dataset sizes (3 repetitions each) and confirm they produce identical results.
+- Build a budget recommendation engine that splits Rs. 1,000,000 across platforms.
+
+---
+
+## Technologies Used
 
 | Technology | Purpose |
 |---|---|
 | Python | Core programming language |
-| NumPy | Synthetic dataset generation |
-| Pandas | Data manipulation and analysis |
-| MapReduce | Mapper and reducer-based processing |
-| Apache Spark | Distributed data processing |
-| PySpark | Python interface for Spark |
-| Matplotlib | Benchmark visualization |
+| NumPy | Synthetic data generation |
+| Pandas | Data processing and the Pandas pipeline |
+| MapReduce | Mapper and reducer based processing (pure Python) |
+| Apache Spark / PySpark | Distributed data processing (local mode) |
+| Matplotlib | Benchmark charts |
 | Java 17 | Spark runtime requirement |
 
 ---
 
-## 🏗 System Architecture
+## System Architecture
 
-The application follows a modular processing architecture.
+1. **Dataset generation:** creates synthetic data using a fixed random seed.
+2. **Dataset validation:** checks that the required datasets exist and generates any that are missing.
+3. **Data processing:** each dataset goes through the three independent pipelines.
+4. **Metric calculation:** CTR, CPC, CPA, CPM, conversion rate, ROAS and revenue per platform.
+5. **Benchmarking:** measures execution time of each pipeline.
+6. **Visualization:** generates comparison charts.
+7. **Recommendation:** scores platforms and splits the Rs. 1,000,000 budget.
 
-### Processing Workflow
-
-1. **Dataset Generation:** Creates synthetic advertising datasets using a fixed random seed.
-2. **Dataset Validation:** Checks whether the required datasets exist and generates missing datasets.
-3. **Data Processing:** Sends each dataset through three independent processing pipelines.
-4. **Metric Calculation:** Calculates advertising performance indicators.
-5. **Benchmarking:** Measures execution time for the different processing approaches.
-6. **Visualization:** Generates charts to compare processing performance.
-7. **Recommendation:** Evaluates platform ROAS and produces ranked recommendations.
-
-### Processing Approaches
-
-**1. Pandas Pipeline**
-
-Uses Pandas DataFrames to process advertising records, aggregate campaign metrics, and calculate performance indicators.
-
-**2. MapReduce Pipeline**
-
-Uses a mapper and reducer approach to organize advertising records by platform and aggregate their metrics.
-
-**3. Apache Spark Pipeline**
-
-Uses PySpark DataFrames and distributed processing operations to analyze advertising datasets.
+**Pandas pipeline:** groups records by platform with DataFrames and calculates the metrics.
+**MapReduce pipeline:** a mapper turns each record into a platform-keyed record, and a reducer sums them per platform and calculates the metrics.
+**Spark pipeline:** uses PySpark DataFrames (`groupBy` and aggregation) in local mode.
 
 ---
 
-## 📊 Dataset Information
+## Dataset Information
 
-The project uses synthetically generated advertising campaign data.
+| Dataset | Records |
+|---|---:|
+| Dataset 1 | 1,000 |
+| Dataset 2 | 10,000 |
+| Dataset 3 | 100,000 |
+| Dataset 4 | 1,000,000 |
 
-Four dataset sizes are used to evaluate processing performance.
+**Platforms:** Facebook, Instagram, Google, TikTok, YouTube. Each platform has its own behaviour profile (click-through rate, conversion rate, cost per thousand impressions), defined in `src/platform_profiles.py`.
 
-| Dataset | Number of Records | Category |
-|---|---:|---|
-| Dataset 1 | 1,000 | Small |
-| Dataset 2 | 10,000 | Medium |
-| Dataset 3 | 100,000 | Large |
-| Dataset 4 | 1,000,000 | Extra Large |
+**Columns:** `date`, `campaign_id`, `platform`, `impressions`, `clicks`, `conversions`, `spend`, `revenue`, `age`, `gender`, `city`, `device`.
 
-### Advertising Platforms
+Records follow a realistic funnel: impressions, then clicks (a fraction of impressions), then conversions (a fraction of clicks), then revenue (conversions times order value). Therefore clicks never exceed impressions and conversions never exceed clicks.
 
-- Facebook
-- Instagram
-- Google
+### Scale and Scope Note
 
-### Dataset Attributes
-
-The advertising records include information such as:
-
-- Advertising platform
-- Impressions
-- Clicks
-- Conversions
-- Advertising spend
-- Revenue
+The project brief describes datasets of up to 10 million records. Due to laptop hardware limits, this project was benchmarked up to 1,000,000 records. Dataset sizes are defined in `DATASET_SIZES` in `src/config.py`, and the generator creates data in chunks of 100,000 rows. Larger sizes can be added by editing that list, but sizes above 1,000,000 have not been tested in this project.
 
 ### Reproducible Data Generation
 
-The dataset generator uses a fixed random seed:
-
-`RANDOM_SEED = 42`
-
-This ensures that datasets can be regenerated consistently.
-
-The generator also supports chunk-based generation to handle larger datasets efficiently.
+The generator uses `RANDOM_SEED = 42`, so the same data is produced every time. Missing datasets are generated automatically before processing.
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
-```text
-ad-budget-optimizer/
-│
-├── src/
-│   ├── benchmark.py
-│   ├── config.py
-│   ├── data_generator.py
-│   ├── main.py
-│   ├── mapreduce_pipeline.py
-│   ├── metrics.py
-│   ├── pandas_pipeline.py
-│   ├── platform_profiles.py
-│   ├── recommendation.py
-│   └── spark_pipeline.py
-│
-├── data/
-│   ├── raw/
-│   │   └── marketing_data_10000.csv
-│   │
-│   └── processed/
-│
-├── outputs/
-│   ├── benchmarks/
-│   │   └── benchmark_results.csv
-│   │
-│   ├── charts/
-│   │   ├── execution_time_comparison.png
-│   │   ├── scalability_comparison.png
-│   │   └── log_scale_comparison.png
-│   │
-│   └── recommendation.csv
-│
-├── generate_charts.py
-├── README.md
-└── .gitignore
-```
+    ad-budget-optimizer/
+    |
+    |-- src/
+    |   |-- benchmark.py
+    |   |-- campaign_analysis.py
+    |   |-- config.py
+    |   |-- data_generator.py
+    |   |-- main.py
+    |   |-- mapreduce_pipeline.py
+    |   |-- metrics.py
+    |   |-- pandas_pipeline.py
+    |   |-- platform_profiles.py
+    |   |-- recommendation.py
+    |   |-- spark_pipeline.py
+    |
+    |-- data/
+    |   |-- raw/
+    |   |   |-- marketing_data_10000.csv    (10K sample kept in Git)
+    |   |-- processed/                      (not tracked)
+    |
+    |-- outputs/
+    |   |-- benchmarks/benchmark_results.csv
+    |   |-- charts/
+    |   |   |-- execution_time_comparison.png
+    |   |   |-- scalability_comparison.png
+    |   |   |-- log_scale_comparison.png
+    |   |-- recommendation.csv
+    |   |-- campaign_performance.csv
+    |
+    |-- generate_charts.py
+    |-- README.md
+    |-- .gitignore
 
 ---
 
-## ⚙ Installation and Setup
+## Installation and Setup
 
 ### Prerequisites
 
-Before running the project, ensure that the following are installed:
-
 - Python 3.10 or later
-- Java Development Kit (JDK) 17
+- Java Development Kit (JDK) 17 (required by Spark)
 - Git
-- Windows, Linux, or macOS
 
-### 1. Clone the Repository
+### 1. Clone the repository
 
-```bash
-git clone https://github.com/daniyalshahid2006/ad-budget-optimizer.git
+    git clone https://github.com/daniyalshahid2006/ad-budget-optimizer.git
+    cd ad-budget-optimizer
 
-cd ad-budget-optimizer
-```
+### 2. Create and activate a virtual environment (Windows PowerShell)
 
-### 2. Create a Virtual Environment
+    python -m venv venv
+    .\venv\Scripts\Activate.ps1
 
-Windows PowerShell:
+### 3. Install dependencies
 
-```powershell
-python -m venv venv
-```
-
-Activate it:
-
-```powershell
-.\venv\Scripts\Activate.ps1
-```
-
-### 3. Install Dependencies
-
-```powershell
-pip install numpy pandas matplotlib pyspark
-```
+    pip install numpy pandas matplotlib pyspark
 
 ### 4. Configure Java 17
 
-Apache Spark requires a compatible Java installation.
-
-Install JDK 17 and configure the `JAVA_HOME` environment variable.
-
-Verify the Java installation:
-
-```powershell
-java -version
-```
+Install JDK 17, set the `JAVA_HOME` environment variable to its folder, and verify with `java -version`. Spark prints Windows Hadoop warnings (such as "winutils.exe not found"), which are harmless.
 
 ---
 
-## ▶ Running the Application
+## Running the Application
 
-From the project root, execute:
+    python .\src\main.py
 
-```powershell
-python .\src\main.py
-```
+This checks for the required datasets (generating any that are missing), runs the Pandas, MapReduce and Spark pipelines on every dataset size, and generates the budget recommendation.
 
-The main application automatically:
+Running the benchmark (3 repetitions per pipeline and size, separate from `main.py`):
 
-1. Checks for the required datasets.
-2. Generates missing datasets when necessary.
-3. Executes the Pandas pipeline.
-4. Executes the MapReduce pipeline.
-5. Executes the Spark pipeline.
-6. Processes all four dataset sizes.
-7. Generates advertising platform recommendations.
+    python .\src\benchmark.py
 
-Each pipeline is executed once per dataset size during normal application execution.
+Regenerating the charts from the saved benchmark results (does not re-run the benchmark):
 
-**Note:** Normal application execution is separate from the benchmark process.
+    python .\generate_charts.py
 
 ---
 
-## ⏱ Benchmarking Methodology
+## Benchmarking Methodology
 
-The project evaluates the three processing approaches using four different dataset sizes.
+Every pipeline performs the same job on the same data: group by platform, sum the raw fields, and calculate the metrics. Each pipeline is run 3 times on each of the 4 dataset sizes (36 runs in total) and the average time is reported. The three pipelines produce identical metric values on every dataset.
 
-Each pipeline is executed three times for each dataset size.
-
-### Total Benchmark Executions
-
-| Parameter | Value |
-|---|---:|
-| Processing approaches | 3 |
-| Dataset sizes | 4 |
-| Repetitions per combination | 3 |
-| Total executions | 36 |
-
-Average execution times are calculated from the repeated benchmark runs.
-
-This provides a consistent basis for comparing the processing approaches.
-
-Benchmark results are stored in:
-
-`outputs/benchmarks/benchmark_results.csv`
-
-To execute the benchmark separately:
-
-```powershell
-python .\src\benchmark.py
-```
-
-This reruns the benchmark and updates the results file.
+Results are saved to `outputs/benchmarks/benchmark_results.csv`.
 
 ---
 
-## 📈 Benchmark Results
+## Benchmark Results
 
-The following table presents the verified average execution times obtained during benchmarking.
-
-### Average Execution Time
+Average execution time in seconds (5 platforms, 3 runs each):
 
 | Dataset Size | Pandas | MapReduce | Spark |
 |---|---:|---:|---:|
-| 1,000 | 0.0036 s | 0.0027 s | 3.7426 s |
-| 10,000 | 0.0123 s | 0.0256 s | 1.0840 s |
-| 100,000 | 0.0644 s | 0.2684 s | 1.0780 s |
-| 1,000,000 | 0.5281 s | 2.8575 s | 1.5831 s |
+| 1,000 | 0.0042 | 0.0029 | 2.9054 |
+| 10,000 | 0.0117 | 0.0250 | 0.5535 |
+| 100,000 | 0.0787 | 0.2741 | 0.5475 |
+| 1,000,000 | 0.6539 | 2.9378 | 1.4043 |
 
-### Performance Analysis
+### Analysis
 
-**Small Datasets**
+- **Small data:** Pandas and MapReduce are almost instant. Spark has start-up overhead, and its first 1,000-row run (7.08 s) includes starting the Spark engine, which inflates the average.
+- **Growing data:** Pandas stays the fastest at every size tested. The pure-Python MapReduce slows down fastest as data grows, because it processes records one at a time.
+- **At 1,000,000 records:** Spark (1.40 s) is about twice as fast as MapReduce (2.94 s), and its time grows much more slowly than the other two. Pandas (0.65 s) is still faster in this single-machine test; a crossover with Spark was not reached within the tested range.
 
-Pandas and MapReduce demonstrate very low execution times for smaller datasets. Spark has additional execution overhead, making it less efficient for these workloads in the measured environment.
-
-**Medium and Large Datasets**
-
-Pandas maintains strong performance as the dataset grows. MapReduce requires more processing time in these experiments.
-
-**Extra-Large Dataset**
-
-For one million records, Pandas records an average execution time of 0.5281 seconds, while Spark records 1.5831 seconds.
-
-Spark performs better than the implemented MapReduce pipeline at this scale, although Pandas remains the fastest in the recorded benchmark.
-
-These findings demonstrate that processing performance depends on dataset size, implementation, execution overhead, and the underlying hardware.
-
-*All measurements represent the tested environment and are not universal performance guarantees.*
+These measurements describe the tested laptop and are not universal performance guarantees.
 
 ---
 
-## 📉 Performance Visualizations
-
-Three charts are generated from the benchmark results to make performance comparisons easier to interpret.
-
-### 1. Execution Time Comparison
-
-Compares the average execution times of Pandas, MapReduce, and Spark across all four dataset sizes.
+## Performance Visualizations
 
 ![Execution Time Comparison](outputs/charts/execution_time_comparison.png)
 
-### 2. Scalability Comparison
-
-Visualizes how execution time changes as the dataset size increases.
-
 ![Scalability Comparison](outputs/charts/scalability_comparison.png)
-
-### 3. Log-Scale Comparison
-
-Uses a logarithmic scale to make differences across processing approaches and dataset sizes easier to examine.
 
 ![Log Scale Comparison](outputs/charts/log_scale_comparison.png)
 
-### Regenerating Charts
-
-To regenerate the visualizations using the existing benchmark results:
-
-```powershell
-python .\generate_charts.py
-```
-
-This script reads the saved benchmark CSV and does not rerun the benchmark.
-
 ---
 
-## 📊 Advertising Analytics
+## Advertising Analytics
 
-The project calculates the following advertising performance metrics:
-
-| Metric | Description |
+| Metric | Formula |
 |---|---|
-| Impressions | Total number of advertisement views |
-| Clicks | Total number of advertisement clicks |
-| Conversions | Total number of completed conversion actions |
-| Advertising Spend | Total advertising expenditure |
-| Revenue | Total revenue generated |
-| CTR | Click-Through Rate |
-| CPC | Cost Per Click |
-| CPM | Cost Per Thousand Impressions |
-| Conversion Rate | Percentage of clicks resulting in conversions |
-| ROAS | Return on Advertising Spend |
+| CTR (%) | `clicks / impressions * 100` |
+| CPC | `spend / clicks` |
+| CPA | `spend / conversions` |
+| CPM | `spend / impressions * 1000` |
+| Conversion Rate (%) | `conversions / clicks * 100` |
+| ROAS | `revenue / spend` |
+| Revenue | sum of revenue |
 
-### Important Formulas
-
-**Click-Through Rate (CTR)**
-
-`CTR = (Clicks / Impressions) × 100`
-
-**Cost Per Click (CPC)**
-
-`CPC = Advertising Spend / Clicks`
-
-**Cost Per Thousand Impressions (CPM)**
-
-`CPM = (Advertising Spend / Impressions) × 1000`
-
-**Conversion Rate**
-
-`Conversion Rate = (Conversions / Clicks) × 100`
-
-**Return on Advertising Spend (ROAS)**
-
-`ROAS = Revenue / Advertising Spend`
+Metrics are calculated from **totals** (total revenue divided by total spend), not by averaging row-level ratios. Division by zero returns 0.
 
 ---
 
-## 🏆 Recommendation System
+## Budget Recommendation Engine
 
-The recommendation system evaluates the advertising platforms using their calculated ROAS.
+The engine analyzes the 1,000,000-record dataset and splits **Rs. 1,000,000** across the five platforms.
 
-It analyzes the one-million-record advertising dataset and ranks platforms according to their return on advertising expenditure.
+**Method**
 
-### Verified Recommendation Results
+1. Calculate each platform's ROAS, CPA and conversion rate.
+2. Score each platform from 0 to 1 on every metric (CPA is inverted, since lower is better).
+3. Combine into one score: ROAS 50%, CPA 25%, conversion rate 25%.
+4. Convert scores to budget shares that sum to 100%.
+5. Apply business constraints: each platform gets at least 5% and at most 40%.
+6. Convert shares to rupee amounts (totalling exactly Rs. 1,000,000) and estimate expected revenue as budget times ROAS.
 
-| Rank | Platform | ROAS | Recommendation |
-|---:|---|---:|---|
-| 1 | Google | 16.99 | Best performing platform |
-| 2 | Instagram | 12.76 | Alternative platform |
-| 3 | Facebook | 11.26 | Lower priority platform |
+**Results**
 
-### Recommendation Analysis
+| Rank | Platform | ROAS | CPA | Current Spend Share | Recommended Share | Budget (Rs.) | Expected Revenue (Rs.) |
+|---:|---|---:|---:|---:|---:|---:|---:|
+| 1 | Google | 16.98 | 5.00 | 25.5% | 29.5% | 294,624 | 5,002,716 |
+| 2 | Instagram | 12.77 | 6.66 | 26.5% | 22.7% | 227,465 | 2,904,728 |
+| 3 | Facebook | 11.25 | 7.56 | 22.5% | 20.2% | 201,557 | 2,267,516 |
+| 4 | YouTube | 8.31 | 10.23 | 14.3% | 15.7% | 157,199 | 1,306,324 |
+| 5 | TikTok | 7.27 | 11.68 | 11.2% | 11.9% | 119,155 | 866,257 |
 
-**Google — Rank 1**
+Total allocated: Rs. 1,000,000. Total expected revenue: about Rs. 12.35 million.
 
-Google achieves the highest ROAS of 16.99, making it the best-performing platform in the generated dataset.
-
-**Instagram — Rank 2**
-
-Instagram achieves a ROAS of 12.76 and represents an alternative advertising platform.
-
-**Facebook — Rank 3**
-
-Facebook records a ROAS of 11.26, placing it third among the evaluated platforms.
-
-### Final Recommendation
-
-Based on the generated dataset, Google is the highest-performing advertising platform according to ROAS.
-
-The recommendation system saves its results to:
-
-`outputs/recommendation.csv`
+Results are saved to `outputs/recommendation.csv`.
 
 ---
 
-## 🔄 Reproducibility and Data Management
+## Campaign Performance
 
-The project is designed to support reproducible execution.
+`src/campaign_analysis.py` groups the 1,000,000-record dataset by `campaign_id` (100 campaigns) and calculates impressions, clicks, conversions, spend, revenue, profit (revenue minus spend), CTR, CPC, CPA, conversion rate and ROAS for each campaign. Campaigns are ranked by ROAS and saved to `outputs/campaign_performance.csv`.
 
-- A fixed random seed of 42 is used for dataset generation.
-- Required datasets are checked before application execution.
-- Missing datasets are generated automatically.
-- Existing datasets are not unnecessarily regenerated.
-- Dataset generation supports all four configured sizes.
-- Benchmark results are stored separately from intermediate processing outputs.
+    python .\src\campaign_analysis.py
 
-### Repository Data Management
-
-To keep the repository lightweight:
-
-| File Category | Git Treatment |
-|---|---|
-| Source code | Included |
-| 10,000-row sample dataset | Included |
-| Other generated raw datasets | Excluded |
-| Intermediate processed CSV files | Excluded |
-| Benchmark results | Included |
-| Recommendation results | Included |
-| Performance charts | Included |
-| Virtual environments | Excluded |
-| Python cache files | Excluded |
-
-Large datasets can be regenerated when needed by the application.
+In this synthetic dataset, campaign IDs are assigned randomly, so campaign results are similar to each other (ROAS ranges from about 12.0 to 12.5). The table demonstrates the method; real campaigns would normally show a much wider spread.
 
 ---
 
-## 📝 Conclusion
+## Reproducibility and Data Management
 
-The Ad Budget Optimizer demonstrates the implementation and evaluation of three different data processing approaches for advertising analytics.
-
-Through experiments involving datasets ranging from 1,000 to 1,000,000 records, the project compares processing execution times and investigates how each approach behaves as the data volume increases.
-
-The benchmark results show that Pandas performs particularly well in the tested environment, while Spark offers a different processing architecture with additional execution overhead. The implemented MapReduce pipeline provides a third approach for comparison.
-
-The recommendation system further demonstrates how advertising metrics can support budget allocation decisions.
-
-Google achieved the highest ROAS in the generated dataset, followed by Instagram and Facebook.
-
-Overall, this project combines:
-
-- Data engineering
-- Data processing
-- Performance benchmarking
-- Advertising analytics
-- Data visualization
-- Automated recommendations
-
-It provides a practical demonstration of data processing techniques and their application to digital advertising optimization.
+- A fixed random seed (42) makes the data identical on every run.
+- Missing datasets are generated automatically, so large files do not need to be stored in Git.
+- Only the 10,000-row sample dataset is tracked in Git; the other raw datasets and the intermediate processed files are excluded.
+- Source code, benchmark results, the recommendation and the charts are tracked.
 
 ---
 
-## 👨‍💻 Author
+## Limitations
+
+- The data is synthetic, so the recommendation shows the method and not real advertising performance.
+- Expected revenue assumes each platform keeps its current ROAS at the new spend level. In practice, returns usually shrink as spend increases.
+- Benchmarks were run on a single laptop up to 1,000,000 records. Sizes up to 10 million were not tested.
+- MapReduce is implemented as a pure-Python mapper and reducer, not on a Hadoop cluster.
+
+---
+
+## Conclusion
+
+The project compares three data processing approaches on advertising data and turns the analysis into a budget decision. All three tools produce identical metrics. Pandas is fastest on the tested single machine, Spark scales best of the distributed-style approaches, and the budget engine recommends giving the largest share (29.5%) to Google, which has the best ROAS and lowest CPA, while keeping TikTok at 11.9% because of its weak conversion rate.
+
+---
+
+## Author
 
 **Daniyal Shahid**
 
 GitHub: [@daniyalshahid2006](https://github.com/daniyalshahid2006)
-
-**Project Repository:** [Ad Budget Optimizer](https://github.com/daniyalshahid2006/ad-budget-optimizer)

@@ -24,7 +24,7 @@ def generate_dataset(total_rows, chunk_size=100_000):
         platform = rng.choice(
             platforms,
             size=rows,
-            p=[0.4, 0.3, 0.3]
+            p=[0.25, 0.25, 0.20, 0.15, 0.15]
         )
 
         impressions = rng.integers(500, 50_001, size=rows)
@@ -74,6 +74,17 @@ def generate_dataset(total_rows, chunk_size=100_000):
             "conversions": conversions,
             "spend": np.round(spend, 2),
             "revenue": np.round(revenue, 2),
+            "age": rng.integers(18, 66, size=rows),
+            "gender": rng.choice(["Male", "Female"], size=rows),
+            "city": rng.choice(
+                ["Lahore", "Karachi", "Islamabad", "Rawalpindi", "Faisalabad", "Multan"],
+                size=rows,
+            ),
+            "device": rng.choice(
+                ["Mobile", "Desktop", "Tablet"],
+                size=rows,
+                p=[0.65, 0.28, 0.07],
+            ),
         })
 
         df.to_csv(
@@ -106,3 +117,4 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     generate_dataset(args.rows)
+
