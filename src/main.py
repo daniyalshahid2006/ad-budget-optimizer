@@ -1,16 +1,39 @@
-# This is a sample Python script.
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+from config import DATASET_SIZES
+from benchmark import ensure_datasets
+from pandas_pipeline import run_pandas_pipeline
+from mapreduce_pipeline import run_mapreduce_pipeline
+from spark_pipeline import run_spark_pipeline
+from recommendation import generate_recommendations
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+def main():
+    print("\n" + "=" * 60)
+    print("AD BUDGET OPTIMIZER")
+    print("=" * 60)
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    # Generate datasets only when missing
+    ensure_datasets()
+
+    # Run all three processing approaches
+    pipelines = {
+        "Pandas": run_pandas_pipeline,
+        "MapReduce": run_mapreduce_pipeline,
+        "Spark": run_spark_pipeline,
+    }
+
+    for size in DATASET_SIZES:
+        print(f"\nPROCESSING DATASET: {size:,} ROWS")
+
+        for name, pipeline in pipelines.items():
+            print(f"\nRunning {name}...")
+            pipeline(size)
+
+    # Generate platform recommendations
+    generate_recommendations()
+
+    print("\nPROJECT EXECUTION COMPLETED SUCCESSFULLY!")
+
+
+if __name__ == "__main__":
+    main()
